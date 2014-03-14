@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='etsyapi',
@@ -11,7 +11,7 @@ setup(
     license='BSD',
     long_description=open('README.md').read(),
     install_requires=[
-        "requests >= 0.13.2",
-        "requests-oauthlib >= 0.4.0",
+        "requests>=0.13.2",
+        "requests-oauthlib>=0.4.0",
     ],
 )
