@@ -1,3 +1,4 @@
+Copyright 2014 Demp (DempDemp github)
 Copyright (c) 2012, Chris Priest
 All rights reserved.
 
