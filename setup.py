@@ -1,9 +1,9 @@
 from distutils.core import setup
 
 setup(
-    name='python-etsy',
-    version='0.1',
-    packages=['etsy',],
+    name='etsyapi',
+    version='0.2',
+    packages=['etsyapi',],
     license='BSD',
     long_description=open('README.md').read(),
     install_requires=[

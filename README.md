@@ -1,3 +1,5 @@
+This is a maintained repo of priestc's python-etsy module.
+
 Why?
 ====
 
@@ -8,7 +10,7 @@ Usage
 
 Initialization
 --------------
-    >>> from etsy import Etsy
+    >>> from etsyapi import Etsy
     >>> e = Etsy(consumer_key, consumer_secret) # gotten from signing up at etsy.com/developers
 
 Get info for user
