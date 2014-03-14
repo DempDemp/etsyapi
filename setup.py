@@ -5,7 +5,7 @@ setup(
     version='0.2',
     description='etsy.com api wrapper',
     url='https://github.com/DempDemp/etsyapi',
-    download_url = 'https://github.com/DempDemp/etsyapi/tarball/0.1',
+    download_url = 'https://github.com/DempDemp/etsyapi/tarball/0.2',
     packages=['etsyapi'],
     keywords=['etsy', 'api', 'etsy.com'],
     license='BSD',
