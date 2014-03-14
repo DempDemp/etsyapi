@@ -1,4 +1,5 @@
 from setuptools import setup
+import os
 
 setup(
     name='etsyapi',
@@ -10,7 +11,7 @@ setup(
     keywords=['etsy', 'api', 'etsy.com'],
     license='BSD',
     maintainer='Demp',
-    long_description=open('README.md').read(),
+    long_description=open(os.path.dirname(os.path.realpath(__file__)) + '/README.md').read(),
     install_requires=[
         "requests>=0.13.2",
         "requests-oauthlib>=0.4.0",
