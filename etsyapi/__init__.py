@@ -46,7 +46,7 @@ class Etsy(object):
             params['color_accuracy'] = color_wiggle
     
         response = self.execute(endpoint, params=params)
-        return json.loads(response.text)
+        return response
     
     def get_user_info(self, user):
         """
@@ -59,7 +59,7 @@ class Etsy(object):
             auth = {'oauth': self.full_oauth}
             
         response = self.execute(endpoint, **auth)
-        return json.loads(response.text)
+        return response
     
     def find_user(self, keywords):
         """
@@ -68,7 +68,7 @@ class Etsy(object):
         endpoint = '/users'
         params = {'keywords': keywords}
         response = self.execute(endpoint, params=params)
-        return json.loads(response.text)
+        return response
     
     def get_auth_url(self, permissions=[]):
         """
@@ -82,7 +82,7 @@ class Etsy(object):
             params = {'scope': " ".join(permissions)}
         self.oauth = self.simple_oauth
         response = self.execute(endpoint, oauth=self.oauth, params=params)
-        parsed = parse_qs(response.text)
+        parsed = parse_qs(response)
         url = parsed['login_url'][0]
         token = parsed['oauth_token'][0]
         secret = parsed['oauth_token_secret'][0]
@@ -112,6 +112,8 @@ class Etsy(object):
         if oauth:
             # making an authenticated request, add the oauth hook to the request
             hooks = {'auth': oauth}
+            if params is None:
+                params = {}
         else:
             if params is None:
                 params = self.params
@@ -129,7 +131,29 @@ class Etsy(object):
             e = response.text
             code = response.status_code
             raise EtsyError('API returned %s response: %s' % (code, e), response)
-        return response
+
+        try:
+            return json.loads(response.text)
+        except (TypeError, ValueError):
+            return response.text
 
     def execute_authed(self, endpoint, method='get', params=None):
         return self.execute(endpoint, method, oauth=self.full_oauth, params=params)
+
+    def iterate_pages(self, f, *p, **d):
+        '''
+        Iterates through pages in a response.
+        Use this method when the response is valid json and has pagination
+        Example:
+            pages = e.iterate_pages('execute_authed', '/shops/GreenTurtleTshirts/receipts', 
+                params={'was_paid': True, 'was_shipped': False})
+            for page in pages:
+                print page
+        '''
+        f = getattr(self, f)
+        r = f(*p, **d)
+        yield r
+        while r['pagination']['next_page'] is not None:
+            d['params']['page'] = r['pagination']['next_page']
+            r = f(*p, **d)
+            yield r
