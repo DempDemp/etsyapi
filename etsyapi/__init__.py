@@ -154,6 +154,10 @@ class Etsy(object):
         r = f(*p, **d)
         yield r
         while r['pagination']['next_page'] is not None:
+            if not d:
+                d = {}
+            if 'params' not in d:
+                d['params'] = {}
             d['params']['page'] = r['pagination']['next_page']
             r = f(*p, **d)
             yield r
