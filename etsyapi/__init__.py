@@ -1,9 +1,14 @@
+import six
 import urllib
-from urlparse import parse_qs
 import json
 import logging
 import requests
 from requests_oauthlib import OAuth1
+
+if six.PY3:
+    from urllib.parse import parse_qs
+else:
+    from urlparse import parse_qs
 
 log = logging.getLogger(__name__)
 
