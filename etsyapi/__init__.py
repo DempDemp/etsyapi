@@ -1,5 +1,4 @@
 import six
-import urllib
 import json
 import logging
 import requests
@@ -7,8 +6,10 @@ from requests_oauthlib import OAuth1
 
 if six.PY3:
     from urllib.parse import parse_qs
+    from urllib.parse import urlencode
 else:
     from urlparse import parse_qs
+    from urllib import urlencode
 
 log = logging.getLogger(__name__)
 
@@ -125,7 +126,7 @@ class Etsy(object):
             else:
                 params.update(self.params)
 
-        querystring = urllib.urlencode(params)
+        querystring = urlencode(params)
         url = "%s%s" % (self.url_base, endpoint)
         if querystring:
             url = "%s?%s" % (url, querystring)
