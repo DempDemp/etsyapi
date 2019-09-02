@@ -1,9 +1,15 @@
-import urllib
-from urlparse import parse_qs
+import six
 import json
 import logging
 import requests
 from requests_oauthlib import OAuth1
+
+if six.PY3:
+    from urllib.parse import parse_qs
+    from urllib.parse import urlencode
+else:
+    from urlparse import parse_qs
+    from urllib import urlencode
 
 log = logging.getLogger(__name__)
 
@@ -104,7 +110,7 @@ class Etsy(object):
         parsed = parse_qs(response.text)
         return {'oauth_token': parsed['oauth_token'][0], 'oauth_token_secret': parsed['oauth_token_secret'][0]}
         
-    def execute(self, endpoint, method='get', oauth=None, params=None):
+    def execute(self, endpoint, method='get', oauth=None, params=None, files=None):
         """
         Actually do the request, and raise exception if an error comes back.
         """
@@ -120,12 +126,12 @@ class Etsy(object):
             else:
                 params.update(self.params)
 
-        querystring = urllib.urlencode(params)
+        querystring = urlencode(params)
         url = "%s%s" % (self.url_base, endpoint)
         if querystring:
             url = "%s?%s" % (url, querystring)
         
-        response = getattr(requests, method)(url, **hooks)
+        response = getattr(requests, method)(url, files=files, **hooks)
         
         if response.status_code > 201:
             e = response.text
