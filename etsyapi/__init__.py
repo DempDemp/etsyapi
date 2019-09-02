@@ -110,14 +110,13 @@ class Etsy(object):
         parsed = parse_qs(response.text)
         return {'oauth_token': parsed['oauth_token'][0], 'oauth_token_secret': parsed['oauth_token_secret'][0]}
         
-    def execute(self, endpoint, method='get', oauth=None, params=None, files=None):
+    def execute(self, endpoint, method='get', oauth=None, params=None, files=None, **hooks):
         """
         Actually do the request, and raise exception if an error comes back.
         """
-        hooks = {}
         if oauth:
             # making an authenticated request, add the oauth hook to the request
-            hooks = {'auth': oauth}
+            hooks['auth'] = oauth
             if params is None:
                 params = {}
         else:
@@ -143,8 +142,8 @@ class Etsy(object):
         except (TypeError, ValueError):
             return response.text
 
-    def execute_authed(self, endpoint, method='get', params=None):
-        return self.execute(endpoint, method, oauth=self.full_oauth, params=params)
+    def execute_authed(self, endpoint, method='get', params=None, **hooks):
+        return self.execute(endpoint, method, oauth=self.full_oauth, params=params, **hooks)
 
     def iterate_pages(self, f, *p, **d):
         '''
